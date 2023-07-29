@@ -54,7 +54,7 @@ async def random(ctx):
     with open(path,'wb') as image:
         image.write(random_comic_png.content)
     await ctx.send('There you go!')
-    await ctx.send(f'Title: `**{random_comic_title}**`')
+    await ctx.send(f'Title: `{random_comic_title}`')
     await ctx.send(file = discord.File(path))
 
 
