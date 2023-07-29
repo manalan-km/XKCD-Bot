@@ -40,7 +40,7 @@ async def random(ctx):
     random_comic_num = rd.randint(1,current_comic_num)
 
     title = pullComic(random_comic_num)
-
+    path = "./XKCD/XKCD.jpg"
     await ctx.send('There you go!')
     await ctx.send(f'Title: `{title}`')
     message = await ctx.send(file = discord.File(path))
@@ -48,6 +48,19 @@ async def random(ctx):
 
 @client.command()
 async def first(ctx):
-    first_comic, title = pullComic()
+    title = pullComic()
+    path = "./XKCD/XKCD.jpg"
+    await ctx.send('XKCD\'s first ever comic!')
+    await ctx.send(f'Title: `{title}`')
+    message = await ctx.send(file = discord.File(path))
+
+@client.command()
+async def latest(ctx):
+    latest_comic_number = getLatestComicNumber()
+    title = pullComic(latest_comic_number)
+    path = "./XKCD/XKCD.jpg"
+    await ctx.send('XKCD\'s latest comic!')
+    await ctx.send(f'Title: `{title}`')
+    message = await ctx.send(file = discord.File(path))
         
 client.run(BOTTOKEN)
