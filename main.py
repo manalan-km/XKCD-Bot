@@ -39,8 +39,7 @@ async def random(ctx):
 
     random_comic_num = rd.randint(1,current_comic_num)
 
-    random_comic_url = 'https://xkcd.com/' + str(random_comic_num) + '/info.0.json'
-    comic,title = pullComic(random_comic_url)
+    comic,title = pullComic(random_comic_num)
 
     if not os.path.exists("./XKCD"):
         os.makedirs("./XKCD")
@@ -50,8 +49,11 @@ async def random(ctx):
         image.write(comic.content)
     await ctx.send('There you go!')
     await ctx.send(f'Title: `{title}`')
-    await ctx.send(file = discord.File(path))
+    message = await ctx.send(file = discord.File(path))
+    # await.ctx.add_reaction('')
 
-
-
+@client.command()
+async def first(ctx):
+    pass
+        
 client.run(BOTTOKEN)
