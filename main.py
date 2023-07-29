@@ -39,14 +39,8 @@ async def random(ctx):
 
     random_comic_num = rd.randint(1,current_comic_num)
 
-    comic,title = pullComic(random_comic_num)
+    title = pullComic(random_comic_num)
 
-    if not os.path.exists("./XKCD"):
-        os.makedirs("./XKCD")
-    path = "./XKCD/XKCD.jpg"
-        
-    with open(path,'wb') as image:
-        image.write(comic.content)
     await ctx.send('There you go!')
     await ctx.send(f'Title: `{title}`')
     message = await ctx.send(file = discord.File(path))
@@ -54,6 +48,6 @@ async def random(ctx):
 
 @client.command()
 async def first(ctx):
-    pass
+    first_comic, title = pullComic()
         
 client.run(BOTTOKEN)
