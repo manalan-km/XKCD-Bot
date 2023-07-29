@@ -41,4 +41,4 @@ def pullComic(number = 1):
     with open(path,'wb') as image:
         image.write(comic_file.content)
 
-    return  comic_file,comic_img_title
+    return comic_img_title
