@@ -1,3 +1,4 @@
+from typing import Optional
 import discord
 from discord.ext import commands
 
@@ -14,7 +15,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = commands.Bot(command_prefix='>', intents= intents)
-
 
 async def add_reactions(msg):
     await msg.add_reaction(f'{constants.left_arrow_emoji}')
@@ -46,22 +46,14 @@ async def send_file(comic_number, message):
 
     message = await context.channel.send(embed=embed)
 
-    # await context.send(message)
-    # await context.send(f'Title: `{title}`')
-    # await context.send(f'Published Date: `{date}`')
-    # await context.send(f'Comic Number: `{comic_number}`')
-    
-    # message = await context.send(file = discord.File(path))
     xkcd.setMessageID(message.id)
-    print("send_file: ",xkcd.getMessageID())
 
     await add_reactions(message)
 
 async def delete_message():
     channel = xkcd.getChannel()
     message_id = xkcd.getMessageID()
-    print("delete_message: ",xkcd.getMessageID())
-    print(channel)
+   
     message = await channel.fetch_message(message_id)
     await message.delete()
 
@@ -70,7 +62,6 @@ async def on_ready():
 
     """Prints when bot is ready to console"""
 
-    
     print(f'{client.user} is ready')
     print('----------------------')
 
@@ -84,11 +75,10 @@ async def hello(ctx):
 async def random(ctx):
     "Pulls a random XKCD comic by using >random."
     xkcd.setContext(ctx)
-    # xkcd.setChannel(ctx.channel)
+
     current_comic_num = xkcd.getLatestComicNumber()
     random_comic_num = rd.randint(1,current_comic_num)
 
-    # xkcd.pullComic(random_comic_num)
     message ='There you go!'
     await send_file( random_comic_num,message)
    
@@ -96,16 +86,15 @@ async def random(ctx):
 
 @client.command()
 async def first(ctx):
-    # xkcd.setChannel(ctx.channel)
+    """Pulls the very first XKCD comic"""
     xkcd.setContext(ctx)
-    # xkcd.pullComic()
 
     message = 'XKCD\'s first ever comic!'
     await send_file(1,message)
     
-
 @client.command()
 async def latest(ctx):
+    "Sends the latest XKCD comic"
     xkcd.setContext(ctx)
 
     latest_comic_number = xkcd.getLatestComicNumber()
@@ -141,10 +130,6 @@ async def on_reaction_add(reaction,user):
         await delete_message()
         await send_file(new_comic_number,message)
         
-
-        
-            
-    
 def main():    
     client.run(BOTTOKEN)
     

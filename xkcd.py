@@ -36,7 +36,7 @@ class XKCD:
      
     
     def pullComic(self,number = 1):
-        """pulls the comic of the number passed, saves it as the file.
+        """pulls the comic of the number passed
        
        number defaults to 1
         """
@@ -50,17 +50,7 @@ class XKCD:
         self.setComicTitle(response)
         self.setComicNumber(response)
         self.setComicDate(response)
-        
-        #requests the url to get the contents of the comic .png file
-        comic_file = requests.get(self.comic_img_url)
-        
-        # if not os.path.exists("./XKCD"):
-        #     os.makedirs("./XKCD")
-        # self.path = "./XKCD/XKCD.jpg"
-            
-        # with open(self.path,'wb') as image:
-        #     image.write(comic_file.content)
-
+    
     def setContext(self, context):
         self.context = context
     def getContext(self):
@@ -71,15 +61,11 @@ class XKCD:
     def getMessageAuthor(self):
         return self.message_author
     
-    
-
     def setMessageID(self, message_id):
         self.message_id = message_id
     def getMessageID(self):
         return self.message_id
     
-
-
     def setComicTitle(self,resp):
         self.current_comic_title = resp['safe_title']
     def getComicTitle(self):
@@ -103,6 +89,7 @@ class XKCD:
         self.comic_img_url = resp['img']
     def getImageURL(self):
         return self.comic_img_url
+    
     def setChannel(self,channel):
         self.channel = channel
     def getChannel(self):
