@@ -76,10 +76,10 @@ class XKCD:
     def getComicTitle(self):
         return self.current_comic_title
 
-    def setComicNumber(self, resp):
+    def setComicNumber(self,resp):
         self.current_comic_num = resp['num']
     def getComicNumber(self):
-        self.current_comic_num
+        return self.current_comic_num
 
     def setComicDate(self,resp):
         self.day = resp['day']
