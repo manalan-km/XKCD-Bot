@@ -16,6 +16,30 @@ intents.message_content = True
 client = commands.Bot(command_prefix='>', intents= intents)
 
 
+
+
+
+async def add_reactions(msg):
+    await msg.add_reaction(f'{constants.left_arrow_emoji}')
+    await msg.add_reaction(f'{constants.right_arrow_emoji}')
+    await msg.add_reaction(f'{constants.random_emoji}')
+
+async def send_file(context):
+    xkcd.setMessageAuthor(context.message.author.name) 
+
+    title = xkcd.getComicTitle()
+    date = xkcd.getComicDate()
+    path = xkcd.getPath()
+    comic_number = xkcd.getComicNumber()
+
+    await context.send(f'Title: `{title}`')
+    await context.send(f'Published Date: `{date}`')
+    await context.send(f'Comic Number: `{comic_number}`')
+    
+    message = await context.send(file = discord.File(path))
+    xkcd.setMessageID(message.id)
+    await add_reactions(message)
+
 @client.event
 async def on_ready():
 
@@ -31,74 +55,40 @@ async def hello(ctx):
     """Sends hello when user uses !hello"""
     await ctx.send('Hello there!')
 
-async def add_reactions(msg):
-    await msg.add_reaction(f'{constants.left_arrow_emoji}')
-    await msg.add_reaction(f'{constants.right_arrow_emoji}')
-    await msg.add_reaction(f'{constants.random_emoji}')
-
-
 @client.command()
 async def random(ctx):
     "Pulls a random XKCD comic by using >random."
     
     current_comic_num = xkcd.getLatestComicNumber()
-
-    xkcd.message_author = ctx.message.author.name
-
     random_comic_num = rd.randint(1,current_comic_num)
-
     xkcd.pullComic(random_comic_num)
-    title = xkcd.getComicTitle()
-    date = xkcd.getComicDate()
-    
-    path = xkcd.getPath()
-
     await ctx.send('There you go!')
-    await ctx.send(f'Title: `{title}`')
-    await ctx.send(f'Published Date: `{date}`')
-    await ctx.send(f'Comic Number: `{random_comic_num}`')
-    
-    message = await ctx.send(file = discord.File(path))
-    xkcd.setMessageID(message.id)
-    await add_reactions(message)
+    await send_file(ctx)
+   
     
 
 @client.command()
 async def first(ctx):
     xkcd.pullComic()
-    title = xkcd.getComicTitle()
-    date = xkcd.getComicDate()
-    path = xkcd.getPath()
     await ctx.send('XKCD\'s first ever comic!')
-    await ctx.send(f'Title: `{title}`')
-    await ctx.send(f'Published Date: `{date}`')
-    await ctx.send(f'Comic Number: `1`')
+    await send_file(ctx)
     
-
-    message = await ctx.send(file = discord.File(path))
-    await add_reactions(message)
 
 @client.command()
 async def latest(ctx):
     latest_comic_number = xkcd.getLatestComicNumber()
     xkcd.pullComic(latest_comic_number)
-    title = xkcd.getComicTitle()
-    date = xkcd.getComicDate()
-    path = xkcd.getPath()
     await ctx.send('XKCD\'s latest comic!')
-    await ctx.send(f'Title: `{title}`')
-    await ctx.send(f'Published Date: `{date}`')
-    await ctx.send(f'Comic Number: `{latest_comic_number}`')
-    message = await ctx.send(file = discord.File(path))
-    await add_reactions(message)
+    await send_file(ctx)
         
 
 @client.event
 async def on_reaction_add(reaction,user):
-    # print(xkcd.getMessageAuthor() != client.user.name)
-    # print(reaction.message.id == xkcd.getMessageID())
+    
     if(client.user.name != user.name) and (reaction.message.id == xkcd.getMessageID()):
-        print(f'{user.name} reacted with {reaction.emoji}')
+        print(f'{user.name} reacted {reaction.emoji}')
+        
+            
     
 def main():    
     client.run(BOTTOKEN)
