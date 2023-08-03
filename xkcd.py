@@ -9,15 +9,18 @@ class XKCD:
         self.current_comic_title = ""
         self.path = ""
         self.comic_img_url = ""
+        self.channel = object()
+        self.context = object()
 
         self.current_comic_num = 0
         self.message_id = 0
         self.day = 0
         self.month = 0
         self.year = 0
+        self.latest_comic_number=0
+        self.setLatestComicNumber()
 
-
-    def getLatestComicNumber(self):
+    def setLatestComicNumber(self):
         """gets the latest comic's number"""
 
         #get the current url of the curr comic response
@@ -25,8 +28,11 @@ class XKCD:
         #requests the url 
         response = requests.get(self.current_comic_url).json()
         #parse the number
-        self.setComicNumber(response)
-        return self.current_comic_num
+        self.latest_comic_number = response['num']
+        
+
+    def getLatestComicNumber(self):
+        return self.latest_comic_number
      
     
     def pullComic(self,number = 1):
@@ -44,18 +50,21 @@ class XKCD:
         self.setComicTitle(response)
         self.setComicNumber(response)
         self.setComicDate(response)
-
+        
         #requests the url to get the contents of the comic .png file
         comic_file = requests.get(self.comic_img_url)
         
-        if not os.path.exists("./XKCD"):
-            os.makedirs("./XKCD")
-        self.path = "./XKCD/XKCD.jpg"
+        # if not os.path.exists("./XKCD"):
+        #     os.makedirs("./XKCD")
+        # self.path = "./XKCD/XKCD.jpg"
             
-        with open(self.path,'wb') as image:
-            image.write(comic_file.content)
+        # with open(self.path,'wb') as image:
+        #     image.write(comic_file.content)
 
-    
+    def setContext(self, context):
+        self.context = context
+    def getContext(self):
+        return self.context
 
     def setMessageAuthor(self, author):
         self.message_author = author
@@ -92,4 +101,9 @@ class XKCD:
     
     def setImageURL(self,resp):
         self.comic_img_url = resp['img']
-
+    def getImageURL(self):
+        return self.comic_img_url
+    def setChannel(self,channel):
+        self.channel = channel
+    def getChannel(self):
+        return self.channel
