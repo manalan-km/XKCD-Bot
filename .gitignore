@@ -1,5 +1,6 @@
 /apitokens.py
 /__pycache__
 XKCD/
-.gitignore
-
+bin/
+lib/
+pyvenv.cfg

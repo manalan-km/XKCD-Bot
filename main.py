@@ -24,30 +24,30 @@ async def add_reactions(msg):
 async def send_file(comic_number, message):
     context = xkcd.getContext()
     xkcd.setChannel(context.channel)
-
     xkcd.setMessageAuthor(context.message.author.name) 
-
     xkcd.pullComic(comic_number)
 
     title = xkcd.getComicTitle()
     date = xkcd.getComicDate()
-    path = xkcd.getPath()
+    # path = xkcd.getPath()
     comic_number = xkcd.getComicNumber()
 
     embed = discord.Embed(
+        description=f'`{message} \r Date: {date}`',
         title=f'`Title: {title}`',
-        description=f'`Date: {date}`',
-        color=0x00ff00
+        color=0x00ff00,
+      
     ) 
     embed.add_field(name='Comic Number:',
                     value=f'`{comic_number}`',
                     inline=False)
     embed.set_image(url=xkcd.getImageURL())
 
+    
     message = await context.channel.send(embed=embed)
 
     xkcd.setMessageID(message.id)
-
+    
     await add_reactions(message)
 
 async def delete_message():
@@ -111,19 +111,11 @@ async def on_reaction_add(reaction,user):
     if(client.user.name != user.name) and (reaction.message.id == xkcd.getMessageID()):
 
         if(reaction.emoji == constants.left_arrow_emoji):
-            if( xkcd.getComicNumber() == 1):
-                new_comic_number = xkcd.getLatestComicNumber()
-                message = 'Going back to the latest comic'
-            else:
-                new_comic_number = xkcd.getComicNumber() - 1
-                message = ' Here is the previous comic'
+                new_comic_number = xkcd.getLatestComicNumber() if xkcd.getComicNumber() == 1 else xkcd.getComicNumber() - 1
+                message = 'Going back to the latest comic' if new_comic_number == 1 else 'Here is the previous comic'
         elif(reaction.emoji == constants.right_arrow_emoji):
-            if (xkcd.getComicNumber() == xkcd.getLatestComicNumber()):
-                new_comic_number = 1
-                message = 'The previous comic was the latest one. Here is the first-ever comic'
-            else:
-                new_comic_number = xkcd.getComicNumber() + 1
-                message = 'Anotha One'
+                new_comic_number = 1 if xkcd.getComicNumber() == xkcd.getLatestComicNumber() else xkcd.getComicNumber() + 1
+                message = 'The previous comic was the latest one. Here is the first-ever comic' if new_comic_number == 1 else 'Anotha One!'
         elif(reaction.emoji == constants.random_emoji):
             new_comic_number = rd.randint(1,xkcd.getLatestComicNumber())
             message = 'A random one!'
